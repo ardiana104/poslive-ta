@@ -1,0 +1,313 @@
+/*
+SQLyog Ultimate v12.5.1 (64 bit)
+MySQL - 8.0.30 : Database - poslive
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`poslive` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `poslive`;
+
+/*Table structure for table `billing_address` */
+
+DROP TABLE IF EXISTS `billing_address`;
+
+CREATE TABLE `billing_address` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `nama_depan` varchar(255) NOT NULL,
+  `nama_belakang` varchar(255) NOT NULL,
+  `alamat_1` varchar(255) NOT NULL,
+  `alamat_2` varchar(255) NOT NULL,
+  `kelurahan` varchar(100) NOT NULL,
+  `kecamatan` varchar(100) NOT NULL,
+  `kabupaten` varchar(100) NOT NULL,
+  `provinsi` varchar(100) NOT NULL,
+  `kode_pos` varchar(5) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `billing_address` */
+
+/*Table structure for table `categories` */
+
+DROP TABLE IF EXISTS `categories`;
+
+CREATE TABLE `categories` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `category_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `categories` */
+
+/*Table structure for table `failed_jobs` */
+
+DROP TABLE IF EXISTS `failed_jobs`;
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `failed_jobs` */
+
+/*Table structure for table `indonesia_cities` */
+
+DROP TABLE IF EXISTS `indonesia_cities`;
+
+CREATE TABLE `indonesia_cities` (
+  `id` char(4) NOT NULL,
+  `province_id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `meta` text,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `indonesia_cities_province_id_foreign` (`province_id`),
+  CONSTRAINT `indonesia_cities_province_id_foreign` FOREIGN KEY (`province_id`) REFERENCES `indonesia_provinces` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `indonesia_cities` */
+
+/*Table structure for table `indonesia_districts` */
+
+DROP TABLE IF EXISTS `indonesia_districts`;
+
+CREATE TABLE `indonesia_districts` (
+  `id` char(7) NOT NULL,
+  `city_id` char(4) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `meta` text,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `indonesia_districts_city_id_foreign` (`city_id`),
+  CONSTRAINT `indonesia_districts_city_id_foreign` FOREIGN KEY (`city_id`) REFERENCES `indonesia_cities` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `indonesia_districts` */
+
+/*Table structure for table `indonesia_provinces` */
+
+DROP TABLE IF EXISTS `indonesia_provinces`;
+
+CREATE TABLE `indonesia_provinces` (
+  `id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `meta` text,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `indonesia_provinces` */
+
+/*Table structure for table `indonesia_villages` */
+
+DROP TABLE IF EXISTS `indonesia_villages`;
+
+CREATE TABLE `indonesia_villages` (
+  `id` char(10) NOT NULL,
+  `district_id` char(7) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `meta` text,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `indonesia_villages_district_id_foreign` (`district_id`),
+  CONSTRAINT `indonesia_villages_district_id_foreign` FOREIGN KEY (`district_id`) REFERENCES `indonesia_districts` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `indonesia_villages` */
+
+/*Table structure for table `migrations` */
+
+DROP TABLE IF EXISTS `migrations`;
+
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `migrations` */
+
+insert  into `migrations`(`id`,`migration`,`batch`) values 
+(1,'2014_10_12_000000_create_users_table',1),
+(2,'2014_10_12_100000_create_password_resets_table',1),
+(3,'2016_08_03_072729_create_provinces_table',1),
+(4,'2016_08_03_072750_create_cities_table',1),
+(5,'2016_08_03_072804_create_districts_table',1),
+(6,'2016_08_03_072819_create_villages_table',1),
+(7,'2019_08_19_000000_create_failed_jobs_table',1),
+(8,'2021_02_09_002139_create_categories_table',1),
+(9,'2021_02_09_002255_create_options_table',1),
+(10,'2021_02_09_002350_create_order_method_table',1),
+(11,'2021_02_09_002439_create_products_table',1),
+(12,'2021_02_14_223718_create_transactions_table',1),
+(13,'2021_02_14_223957_create_product_transactions_table',1),
+(14,'2021_02_17_143551_create_billing_address_table',1);
+
+/*Table structure for table `options` */
+
+DROP TABLE IF EXISTS `options`;
+
+CREATE TABLE `options` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `option_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `options` */
+
+/*Table structure for table `order_method` */
+
+DROP TABLE IF EXISTS `order_method`;
+
+CREATE TABLE `order_method` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_order_method` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `order_method` */
+
+/*Table structure for table `password_resets` */
+
+DROP TABLE IF EXISTS `password_resets`;
+
+CREATE TABLE `password_resets` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `password_resets` */
+
+/*Table structure for table `product_transactions` */
+
+DROP TABLE IF EXISTS `product_transactions`;
+
+CREATE TABLE `product_transactions` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint unsigned NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `product_price` varchar(255) NOT NULL,
+  `product_option` varchar(255) NOT NULL,
+  `order_method` varchar(255) NOT NULL,
+  `invoice_number` varchar(255) NOT NULL,
+  `qty` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `product_transactions` */
+
+/*Table structure for table `products` */
+
+DROP TABLE IF EXISTS `products`;
+
+CREATE TABLE `products` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `option` varchar(255) DEFAULT NULL,
+  `order_method` varchar(255) DEFAULT NULL,
+  `image` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `stock` int NOT NULL,
+  `price` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `products_category_foreign` (`category`),
+  KEY `products_option_foreign` (`option`),
+  KEY `products_order_method_foreign` (`order_method`),
+  CONSTRAINT `products_category_foreign` FOREIGN KEY (`category`) REFERENCES `categories` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `products_option_foreign` FOREIGN KEY (`option`) REFERENCES `options` (`name`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `products_order_method_foreign` FOREIGN KEY (`order_method`) REFERENCES `order_method` (`name`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `products` */
+
+/*Table structure for table `transactions` */
+
+DROP TABLE IF EXISTS `transactions`;
+
+CREATE TABLE `transactions` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `invoice_number` varchar(255) NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `pay` int NOT NULL,
+  `total` int NOT NULL,
+  `status` set('Pending','On-Hold','Cancelled','Processing','Completed') NOT NULL DEFAULT 'Pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `transactions` */
+
+/*Table structure for table `users` */
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `role` set('admin','kasir','customer') NOT NULL DEFAULT 'customer',
+  `email` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
+
+/*Data for the table `users` */
+
+insert  into `users`(`id`,`name`,`avatar`,`role`,`email`,`email_verified_at`,`password`,`remember_token`,`created_at`,`updated_at`) values 
+(1,'Admin',NULL,'admin','admin@gmail.com',NULL,'$2y$10$DJqAGBhG3EDh7u6P7tEphey6CsRd1YcNyf3Nx0KFuzrYM/6pXsETG',NULL,NULL,NULL);
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
